@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+line-bot-sdk = "*"
+selenium = "*"
+chromedriver-binary = "==87.*"
+gunicorn = "*"
+psycopg2 = "*"
+beautifulsoup4 = "*"
+requests = "*"
+sqlalchemy = "*"
+lxml = "*"
+
+[dev-packages]
+pylint = "*"
+
+[requires]
+python_version = "3.7"
