@@ -16,6 +16,7 @@ sqlalchemy = "*"
 lxml = "*"
 mypy = "*"
 pylint = "*"
+jaconv = "*"
 
 [dev-packages]
 pylint = "*"
