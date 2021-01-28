@@ -17,6 +17,7 @@ lxml = "*"
 mypy = "*"
 pylint = "*"
 jaconv = "*"
+jpholiday = "*"
 
 [dev-packages]
 pylint = "*"

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "31783d7b1da4b70956d3276e08f1ff709f08c2451a28fbaae6b713125fd410e1"
+            "sha256": "38eb31ec6e4800028b9337d164e68e01c4f57accb2a9983a8c044800fb46c228"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -99,7 +99,7 @@
                 "sha256:c729845434366216d320e936b8ad6f9d681aab72dc7cbc2d51bedc3582f3ad1e",
                 "sha256:fff4f0c04e1825522ce6949973e83110a6e907750cd92d128b0d14aaaadbffdc"
             ],
-            "markers": "python_version >= '3.6' and python_version < '4.0'",
+            "markers": "python_version >= '3.6' and python_version < '4'",
             "version": "==5.7.0"
         },
         "itsdangerous": {
@@ -124,6 +124,14 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
             "version": "==2.11.2"
+        },
+        "jpholiday": {
+            "hashes": [
+                "sha256:34fe7bc16b1c84aa4368157a2d4b9fbf859c238f18365c122303622bcf100d7b",
+                "sha256:59704b8a556715e10631f07da245f9badf686843309dd6cc614ab5bf565437ad"
+            ],
+            "index": "pypi",
+            "version": "==0.1.5"
         },
         "lazy-object-proxy": {
             "hashes": [
@@ -446,7 +454,7 @@
                 "sha256:1b465e494e3e0d8939b50680403e3aedaa2bc434b7d5af64dfd3c958d7f5ae80",
                 "sha256:de3eedaad74a2683334e282005cd8d7f22f4d55fa690a2a1020a416cb0a47e73"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4.0'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'",
             "version": "==1.26.3"
         },
         "werkzeug": {
@@ -478,7 +486,7 @@
                 "sha256:c729845434366216d320e936b8ad6f9d681aab72dc7cbc2d51bedc3582f3ad1e",
                 "sha256:fff4f0c04e1825522ce6949973e83110a6e907750cd92d128b0d14aaaadbffdc"
             ],
-            "markers": "python_version >= '3.6' and python_version < '4.0'",
+            "markers": "python_version >= '3.6' and python_version < '4'",
             "version": "==5.7.0"
         },
         "lazy-object-proxy": {
