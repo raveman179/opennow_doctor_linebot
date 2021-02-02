@@ -18,6 +18,7 @@ mypy = "*"
 pylint = "*"
 jaconv = "*"
 jpholiday = "*"
+dataclasses-json = "*"
 
 [dev-packages]
 pylint = "*"
