@@ -19,6 +19,7 @@ pylint = "*"
 jaconv = "*"
 jpholiday = "*"
 dataclasses-json = "*"
+webdriver-manager = "*"
 
 [dev-packages]
 pylint = "*"

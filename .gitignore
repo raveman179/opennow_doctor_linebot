@@ -1,1 +1,3 @@
 .vscode/
+.linebot/
+heroku_backend/test.py
