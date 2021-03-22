@@ -36,7 +36,6 @@ class opentime:
     pm_start : str = ""
     pm_end : str = ""
 
-
 @dataclass
 class clinic_openday:
         mon : opentime = opentime()
@@ -47,21 +46,26 @@ class clinic_openday:
         sat : opentime = opentime()
         sun : opentime = opentime()
         holiday : opentime = opentime()
-        
+
+@dataclass
+class closetime:
+    am : bool = False
+    pm : bool = False
+
 @dataclass
 class clinic_closeday:
     '''
     一日休診の曜日を持つdataclass
     休診日：True 診療日：True
     '''
-    mon : bool = False
-    tus : bool = False
-    wed : bool = False
-    thu : bool = False 
-    fri : bool = False 
-    sat : bool = True 
-    sun : bool = True 
-    hol : bool = True 
+    mon : closetime = closetime()
+    tus : closetime = closetime()
+    wed : closetime = closetime()
+    thu : closetime = closetime() 
+    fri : closetime = closetime() 
+    sat : closetime = closetime()
+    sun : bool = False
+    hol : bool = False
 
 @dataclass_json
 @dataclass
@@ -128,22 +132,38 @@ class PageFormatting:
         opentime_dict = {}
         # 診療受付日の表現に邪魔なので"曜"、"曜日"をstripして、残った月、火、水・・を正規表現でマッチさせる
         openday = [s.replace(' ', '') for s in openday]
+        # '月〜金'のような表記を展開してリストにする
+        weekday_ext = lambda start, end : dow_l[dow_l.index(start):dow_l.index(end)+1]
 
         for i,e in enumerate(openday):
             # 曜日の処理
             if week_pat.match(e):
                 day = re.sub(r'曜日|曜', "", e)
-                # '月～水・金曜日'のような表記の処理を考える
-                # 先に〜がついている方を
-
-                # 月〜金曜日のような表記の場合
-                if '~' in day or '〜' in day:                        
-                    day = re.split(r'〜|~', day)
-                    ext_day = dow_l[dow_l.index(day[0]):dow_l.index(day[1])+1]                
                 
+                # 月・金のような表記の場合
                 if '･' in day:
                     day = day.split('･') 
+
+                # 月～水・金曜日のような表記の場合
+                if (any(['~' in d for d in day]) or any(['〜' in d for d in day])) and isinstance(day, List):
+                    tilda = list(filter(lambda i : '~' in i or '〜' in i, day))
+                    
+                    # ex 月~水・木~土のような表記の対策として、tildaの要素のインデックスをリストにする
+                    tilda_index = [day.index(t) for t in tilda]
                 
+                    between_day = [re.split(r'〜|~', day[t]) for t in tilda_index]
+                    day.remove(tilda[0])
+                 
+                    for b in between_day:  
+                        tmp = weekday_ext(b[0], b[1])  
+                        day.extend(tmp)
+                    ext_day = day
+
+                # 月〜金のような表記の場合
+                elif isinstance(day, str):
+                    between_day = re.split(r'〜|~', day)            
+                    ext_day = weekday_ext(between_day[0], between_day[1])
+
                 # '月火水木'のように区切り文字がない場合
                 else:
                     ext_day = list(day)
@@ -175,11 +195,15 @@ class PageFormatting:
                     od = opentime_dict.copy()
                     setattr(self.clinic_openday, ext, od)
 
-    def closeday(self, closeday:list) -> dict:
+    def set_closeday(self, closeday:list) -> dict:
+        holiday = re.compile(r'祝.?日|.盆.?|年末年始')
+        
 
 
+        pass
 
-        return closeday
+
+        
 
 
 
@@ -188,17 +212,12 @@ class PageFormatting:
         extractionで抽出した情報をJSON形式に加工する
         """
         name = item[0]
-    
-        # 表記揺れがあるのでインデックスでの指定は不可能　ー＞表記揺れを何とかする
-        # 項目を検索してインデックスを取得する
-        
         openday = [item[i] for i in range(item.index('【診療受付時間】')+1, item.index('【休診日】'))]
+        self.set_openday(openday)
         
-        
-        
-        # 午後休診の場合の処理を考える
         closeday = item[item.index('【休診日】')+1].split('、')        
-        holiday = re.compile(r'祝.?日|.盆.?|年末年始')
+        
+        
         # for c in closeday:
         #     info_json[closeday][weekday[c]] = "True"
 
@@ -262,10 +281,9 @@ if __name__ == "__main__":
     # clinic_info.openday.mon.am_start = "9:00"
 
     # info_json = clinic_info.to_json(indent=4, ensure_ascii=False)
-    # # print(info_json)
     # print(info_json)
 
-    # item = PageFormatting.extraction("http://www.acma.or.jp/profile/details.cfm?cd=28")
+    # item = PageFormatting.extraction("http://www.acma.or.jp/profile/details.cfm?cd=219")
     # print(item)
 
     opendaylist1 = ['月・火・木・金曜日', '午前9：00～12：00午後2：00～6：30', '土曜日', '午前9：00～12：00午後1：00～3：30','祝日(不定期)', '午前9：00～12：00午後1：00～3：00']
@@ -275,12 +293,24 @@ if __name__ == "__main__":
     opendaylist5 = ['火〜土曜日', '午前 ９：０0～12：０0 午後 2：０0～ 6：00', '第１・３・５月曜日', '午前9：00～12：00']
     # 第１・３・５月曜日がパースできない
     opendaylist6 = ['月～水・金曜日','午前 8：30～12：30 午後 2：30～ 7：00','木曜日','午前 8：30～12：30','土曜日','午前 8：30～12：30 午後 2：00～ 3：00']
-    # 水・金がパースできない
     opendaylist7 = ['月～金曜日','午前 8：30～12：30 午後 2：00～ 6：00','土曜日','午前 8：30～12：30','往診（水曜日）','午後2：30～4：00']
     # 「往診」をパースすると水曜日の診療時間が上書きされる
     opendaylist8 = ['月・火･水・金曜日','午前 9：00～12：00','午後 2：00～ 6：00','木・土・祝日','午前 9：00～13：00']
 
-    opendaylist = [opendaylist1, opendaylist2, opendaylist3, opendaylist4, opendaylist5, opendaylist6, opendaylist7, opendaylist8]
-
-    PageFormatting.set_openday(opendaylist6)
+    openday = [opendaylist1, opendaylist2, opendaylist3, opendaylist4, opendaylist5, opendaylist6, opendaylist7, opendaylist8]
+    
+    PageFormatting.set_openday(opendaylist2)
     # PageFormatting.info_perse(item)
+
+    closeday1 = ['木曜日、祝祭日']
+    closeday2 = ['月曜日以外、祝日']
+    closeday3 = ['日曜、祝祭日水・土曜日午後']
+    closeday4 = ['日曜、祝日４月１日(開業記念日)']
+    closeday5 = ['日曜、祝日']
+    closeday6 = ['木曜午後、日曜、祝祭日']
+    closeday7 = []
+    closeday8 = ['水曜・日曜・祝日・お盆休み・年末年始']
+
+
+
+    # for c in closeday:
