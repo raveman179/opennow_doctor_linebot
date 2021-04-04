@@ -140,15 +140,15 @@ class PageFormatting:
             if week_pat.match(e):
                 day = re.sub(r'曜日|曜', "", e)
                 
-                # 月・金のような表記の場合
+                # '月・金'のような表記の場合
                 if '･' in day:
                     day = day.split('･') 
 
-                # 月～水・金曜日のような表記の場合
+                # '月～水・金曜日'のような表記の場合
                 if (any(['~' in d for d in day]) or any(['〜' in d for d in day])) and isinstance(day, List):
                     tilda = list(filter(lambda i : '~' in i or '〜' in i, day))
                     
-                    # ex 月~水・木~土のような表記の対策として、tildaの要素のインデックスをリストにする
+                    # ex '月~水・木~土'のような表記の対策として、tildaの要素のインデックスをリストにする
                     tilda_index = [day.index(t) for t in tilda]
                 
                     between_day = [re.split(r'〜|~', day[t]) for t in tilda_index]
@@ -159,7 +159,7 @@ class PageFormatting:
                         day.extend(tmp)
                     ext_day = day
 
-                # 月〜金のような表記の場合
+                # '月〜金'のような表記の場合
                 elif isinstance(day, str):
                     between_day = re.split(r'〜|~', day)            
                     ext_day = weekday_ext(between_day[0], between_day[1])

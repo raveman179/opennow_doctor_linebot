@@ -1,3 +1,5 @@
 .vscode/
 .linebot/
+.cabocha_ver/
 heroku_backend/test.py
+sudachipy_test.py
